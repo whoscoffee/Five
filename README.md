@@ -10,6 +10,4 @@ Rules of the game:
     many times u guessed and if u used the cheatcode
 
 note:
-    u can just compile and run it and it should word
-    
-    but if u want, u can give it another file to guess from as and argument.
+    u can just compile and run it and it should work. but if u want, u can give it another file to guess from as and argument.
