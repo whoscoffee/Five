@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
 
+// this reads and stores a list of words given file.
 class Dictionary {
 
     private HashSet<String> words = new HashSet<>();
