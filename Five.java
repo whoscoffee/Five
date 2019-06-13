@@ -8,11 +8,10 @@ import java.util.TreeSet;
 //this is an ai, for a word guessing game
 // by jake
 class Five {
-
+    
     Dictionary dictionary;
-    // exactly what it sounds like
+    // inits
     ArrayList<Character> alphabet = new ArrayList<>();
-    // so ai can compare and what not
     ArrayList<String> guessedWords = new ArrayList<>();
     ArrayList<ArrayList<Character>> knownWords = new ArrayList<>();
     ArrayList<Integer[]> knownValues = new ArrayList<>();
@@ -20,9 +19,8 @@ class Five {
     // misc
     int numguesses;
     boolean cheated;
-    // secret word being guessed for
     String secret, cheatcode = "xxxxx";
-    // secret word in a char array
+    // secret word as a char array
     ArrayList<Character> car = new ArrayList<>();
 
     // constructor
@@ -35,23 +33,21 @@ class Five {
         start(filename);
     }
 
-    // sends file to Dictionary
-    // sets secret word
+    // sends file to Dictionary and sets secret word
     public void start(String filename) {
         dictionary = new Dictionary(filename);
         secret = dictionary.getLegalSecretWord();
-        // sets an array of the secret word
+        // sets car
         for (char c : secret.toCharArray())
             car.add(c);
         play();
     }
 
-    // this is some durty looking code
-    // but its my ai, and the game loop, so its kinda important
-    // altho NEEDS SEPERATION!
+    // this is my ai, and the game loop
+    // NEEDS SEPERATION!
     public void play() {
         char c = 'a';
-        // a - z
+        // sets alphabet
         for (int i = 0; i < 26; i++)
             alphabet.add(c++);
         // start up stuff
@@ -59,28 +55,30 @@ class Five {
         System.out.println("Five!");
         boolean istrue = true;
         String guess = "";
-        // until ai is correct
-        // also the game loop
+        // ai guessing loop AND GAME LOOP!?
         finishline: while (istrue) {
-            // start up stuff
+            // more start up stuff
             System.out.print("Your Guess? ");
             boolean hasGuessed = false;
-            // while ai hasnt made guess
+            // while ai hasnt made a final guess
             outer: while (hasGuessed == false) {
-                // makes random guess
+                // ai makes random guess
                 guess = dictionary.getLegalSecretWord();
-                // compares with alphabet
+                // lesson: when playing the game, u can sort out characters that arent in the correct guess
+                // so with that we have a list of chars non of which should be in our guess, and definently arent in the correct guess
+                // so here the ai compares its guess with the aphabet characters it knows arent right
+                // and if the alphabet contains any of the same characters it reguesses
                 for (char d : guess.toCharArray()) {
                     if (alphabet.contains(d) == false)
                         continue outer;
                     if (alphabet.contains(d) == false && knownLetters.size() < new Random().nextInt(4))
                         continue outer;
                 }
-                // to make sure it doesnt guess a word twice
+                // if already guessed, then it guesses again
                 if (guessedWords.contains(guess) == false)
                     hasGuessed = true;
             }
-            // add to list
+            // stores guess to make sure it doesnt guess a word twice
             guessedWords.add(guess);
             // game loop start up stuff
             ArrayList<Character> ahh = new ArrayList<>();
@@ -107,24 +105,26 @@ class Five {
                 System.out.println("I don't know that word.");
             numguesses++;
             // pyrimid Ai kick ass
-            // it kinda does alot
-            // so i based this off of how i play the game
-            // i have an alphabet
-            // i compare my previous guesses, matchedletters, and in-placeletters
-            // and i remove what i can in the ways i know
-            // altho pseudocode is here for real the explaination
+            // if my guess had no inplace or matching letters
             if (countMatchingLetters(guess) == 0 && countInPlaceLetters(guess) == 0) {
                 for (char d : guess.toCharArray())
+                    //then removes all characters of guess from alphabet
                     if (alphabet.contains(d)) {
                         alphabet.remove(alphabet.indexOf(d));
+                        // gets fun here
                         for (int i = 0; i < knownWords.size(); i++)
+                            // if current known word has more than 2 characters
                             if (knownWords.get(i).size() > 1)
+                                // for each character left in alphabet
                                 for (int j = 0; j < alphabet.size(); j++) {
+                                    // for the characters in current knowWord
                                     for (int k = 0; k < knownWords.get(i).size(); k++)
+                                        // if alphabet doesnt contain current knownword character, then remove that char from known word
                                         if (alphabet.contains(knownWords.get(i).get(k)) == false
                                                 && knownWords.size() > 1)
                                             knownWords.get(i).remove(alphabet.get(j));
                                 }
+                            // if known word is only 1 character long, then add that character to knowletters
                             else if (knownWords.get(i).size() == 1) {
                                 knownLetters.add(knownWords.get(i).get(0));
                             }
@@ -139,7 +139,9 @@ class Five {
         }
 
     }
-
+    
+    // BELOW: are some helper functions
+    
     // return # of matching letters secret/guess
     private int countMatchingLetters(String guess) {
         int count = 0;
